@@ -2,8 +2,10 @@ class SentencesController < ApplicationController
   def index
     page = Sentence.after(params[:after])
     last_id = page.last ? page.last.id : params[:after]
+    json_page = ActiveModel::SerializableResource.new(page,
+      each_serializer: SentenceSerializer)
     render json: { 
-      sentences: page,
+      sentences: json_page,
       remaining: Sentence.count_after(last_id)
     }
   end
